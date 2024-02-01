@@ -8,16 +8,18 @@ export class UserService {
   private users: User[] = [];
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-
     // generate a hash for the password using bcrypt
-    const saltDrRounds = 10
-    const passwordHash = await hash(createUserDto.encryptedPassword, saltDrRounds);
+    const saltDrRounds = 10;
+    const passwordHash = await hash(
+      createUserDto.encryptedPassword,
+      saltDrRounds,
+    );
 
     const user: User = {
       ...createUserDto,
       id: this.users.length + 1,
       encryptedPassword: passwordHash,
-    }
+    };
 
     this.users.push(user);
 

@@ -1,8 +1,8 @@
-export interface User{
+export interface User {
   id: number;
   fullName: string;
   emailAddress: string;
   encryptedPassword: string;
-  creationDate: Date; 
-  lastUpdateDate: Date; 
+  creationDate: Date;
+  lastUpdateDate: Date;
 }
