@@ -1,5 +1,5 @@
-// DTO (Data Transfer Object)
-export interface CreateUserDto {
+export interface User{
+  id: number;
   fullName: string;
   emailAddress: string;
   encryptedPassword: string;
