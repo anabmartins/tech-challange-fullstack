@@ -7,12 +7,12 @@ import { User } from './interfaces/user.interface';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // update data
+  // insert data
   @Post()
   async createUser(@Body() createUser: CreateUserDto): Promise<User> {
     return this.userService.createUser(createUser);
   }
-
+  
   @Get()
   async getAllUser() {
     return this.userService.getAllUser();
