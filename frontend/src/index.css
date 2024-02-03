@@ -1,12 +1,12 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Arial, sans-serif;
   line-height: 1.5;
-  font-weight: 400;
 }
 
-a, 
+a,
 a:hover {
   text-decoration: inherit;
+  color: inherit;
 }
 
 body {
@@ -14,22 +14,78 @@ body {
   padding: 0;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%;
 }
-button:hover {
-  border-color: #646cff;
+.login {
+  background-color: #ffffff;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.card {
+  background-color: #ffffff;
+  /* padding: 2rem; */
+  width: 50%;
+  height: 70%;
+  border: solid 1px #bbbbbb;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.inputs {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem;
+  margin: 2rem 0rem;
+}
+.btn-login {
+  margin: 2rem 0rem;
+}
+.footer {
+  width: 100%;
+  padding: 2rem 0rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+}
+.span {
+  color: #4e4e4e;
+  font-size: 1rem;
+  margin: 1.5rem 0rem;
+}
+.span a {
+  text-decoration: underline;
 }
 
+.line {
+  width: 12%;
+  height: 4px;
+  background-color: #2f88ff;
+}
+
+@media screen and (max-width: 650px) {
+  .card {
+    width: 70%;
+  }
+  .line {
+    width: 20%;
+  }
+  .span {
+    font-size: .8rem;
+  }
+}
