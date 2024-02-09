@@ -1,5 +1,6 @@
 import { useState } from 'react'
 
+// set the user logged in localstorage
 function getUser(){
  let user = local storage.getItem('user')
 if(user){
@@ -13,6 +14,14 @@ return user;
 const Manage = () => {
 
 const {user, setUser} = useState(getUser());
+
+// logout user
+const handleLogout= () => {
+  local storage.removeItem('user')
+  setUser = (null)
+}
+
+
   return (
     <>
       <div className="main">
@@ -20,7 +29,11 @@ const {user, setUser} = useState(getUser());
           <img src="/icon-park_car.svg" className="icon" alt="" />
           <h1 className="title">Gerenciamento</h1>
           <div className="line"></div>
-          
+
+          {user && (
+           <p className="userName">Olá, {user.name}</p>
+           <button className="logout" onClick={handleLogout}>sair</button>
+         )
         </div>
       </div>
     </>
