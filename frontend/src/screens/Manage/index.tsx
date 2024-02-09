@@ -1,26 +1,24 @@
-import { useState } from 'react'
+import { useState } from "react";
 
 // set the user logged in localstorage
-function getUser(){
- let user = local storage.getItem('user')
-if(user){
-   user = JSON.parse(user)
+function getUser() {
+  let user = localStorage.getItem('user');
+  if (user) {
+    user = JSON.parse(user);
   } else {
-  user = null
+    user = null;
   }
-return user;
+  return user;
 }
 
 const Manage = () => {
+  const [ user, setUser ] = useState(getUser());
 
-const {user, setUser} = useState(getUser());
-
-// logout user
-const handleLogout= () => {
-  local storage.removeItem('user')
-  setUser = (null)
-}
-
+  // logout user
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   return (
     <>
@@ -31,9 +29,13 @@ const handleLogout= () => {
           <div className="line"></div>
 
           {user && (
-           <p className="userName">Olá, {user.name}</p>
-           <button className="logout" onClick={handleLogout}>sair</button>
-         )
+            <>
+              <p className="userName">Olá, {user.name}</p>
+              <button className="logout" onClick={handleLogout}>
+                sair
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>
