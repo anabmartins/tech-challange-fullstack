@@ -1,8 +1,8 @@
 export interface User {
   id: number;
-  fullName: string;
-  emailAddress: string;
-  encryptedPassword: string;
+  name: string;
+  email: string;
+  password: string;
   creationDate: Date;
   lastUpdateDate: Date;
 }

@@ -10,13 +10,13 @@ export class UserService {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     // generate a hash for the password using bcrypt
     const saltDrRounds = 10;
-    const passwordHash = await hash(createUserDto.encryptedPassword,
+    const passwordHash = await hash(createUserDto.password,
 saltDrRounds);
 
     const user: User = {
       ...createUserDto,
       id: this.users.length + 1,
-      encryptedPassword: passwordHash,
+      password: passwordHash,
     };
 
     this.users.push(user);
