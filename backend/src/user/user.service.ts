@@ -15,7 +15,7 @@ saltDrRounds);
 
     const user: User = {
       ...createUserDto,
-      id: this.users.length + 1,
+      userId: this.users.length + 1,
       password: passwordHash,
     };
 
