@@ -1,23 +1,24 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // set the user logged in localstorage
 function getUser() {
-  let user = localStorage.getItem('user');
-  if (user) {
-    user = JSON.parse(user);
-  } else {
-    user = null;
-  }
+  let user = localStorage.getItem("user");
+  if (user) user = JSON.parse(user); else user = null;
+  console.log(user);
+  
   return user;
 }
 
 const Manage = () => {
-  const [ user, setUser ] = useState(getUser());
-
+  const [user, setUser] = useState(getUser());
+  const navigate = useNavigate();
+  
   // logout user
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
+    navigate('/')
   };
 
   return (

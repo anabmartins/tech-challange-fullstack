@@ -1,26 +1,61 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+// redux
+import { useDispatch, useSelector } from "react-redux";
+// components
 import Footer from "../../components/footer";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
+// material ui imports
+import {
+  Button,
+  Box,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+  TextField,
+} from "@mui/material";
+
+import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
+import { registerUser } from "../../redux/userSlicer";
 
 const SignUp = () => {
+  // show password
   const [showPassword, setShowPassword] = useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
+  };
+
+  // name, email and password states
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  // redux states
+  const { loading, error } = useSelector((state: any) => state.user);
+
+  const dispatch = useDispatch();
+
+  const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let userCredentials = {
+      name,
+      email,
+      password,
+    };
+    dispatch(registerUser(userCredentials)).then(
+      (actionResult: { payload: any }) => {
+        const result = actionResult.payload;
+        if (result) {
+          setName("");
+          setEmail("");
+          setPassword("");
+        }
+      }
+    );
   };
 
   return (
@@ -30,7 +65,7 @@ const SignUp = () => {
           <img src="/icon-park_car.svg" alt="car" className="img-icon" />
           <h1 className="title">Cadastro</h1>
           <span className="line"></span>
-          <form action="" className="form">
+          <form className="form" onSubmit={handleRegisterEvent}>
             <div className="inputs">
               <Box
                 component="form"
@@ -41,11 +76,13 @@ const SignUp = () => {
                 autoComplete="off"
               >
                 <TextField
-                fullWidth 
                   required
+                  // fullWidth
                   id="outlined-basic"
                   label="Nome completo"
                   variant="outlined"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Box>
               <Box
@@ -57,35 +94,27 @@ const SignUp = () => {
                 autoComplete="off"
               >
                 <TextField
-                fullWidth 
+                  fullWidth
                   required
                   id="outlined-basic"
                   label="E-mail"
                   variant="outlined"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Box>
-              {/* <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "40ch" },
-                }}
-                noValidate
-                autoComplete="off"
+              <FormControl
+                sx={{ m: 1, width: "40ch" }}
+                // required
+                variant="outlined"
               >
-                <TextField
-                  required
-                  type="password"
-                  id="outlined-basic"
-                  label="Senha"
-                  variant="outlined"
-                />
-              </Box> */}
-              <FormControl sx={{ m: 1, width: "40ch" }} required variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">
                   Senha
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   type={showPassword ? "text" : "password"}
                   endAdornment={
                     <InputAdornment position="end">
@@ -103,9 +132,14 @@ const SignUp = () => {
                 />
               </FormControl>
             </div>
-            <Button variant="contained" className="btn-login">
-              Cadastrar
+            <Button variant="contained" className="btn-login" type="submit">
+            {loading?'Loading..':'Cadastrar'}
             </Button>
+            {error && (
+              <div className="error-message">
+                <ErrorOutline /> {error}
+              </div>
+            )}
             <span className="span">
               Já possui conta? <NavLink to="/">Login</NavLink>
             </span>

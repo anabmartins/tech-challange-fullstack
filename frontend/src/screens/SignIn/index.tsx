@@ -1,18 +1,11 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Footer from "../../components/footer";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import InputLabel from "@mui/material/InputLabel";
-import InputAdornment from "@mui/material/InputAdornment";
-import FormControl from "@mui/material/FormControl";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../redux/userSlicer";
+import Footer from "../../components/footer";
+// mui imports
+import { Button, Box, IconButton, OutlinedInput, InputLabel, InputAdornment,FormControl, TextField } from "@mui/material";
+import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
 
 const SignIn = () => {
   // show and hide password feature
@@ -40,8 +33,7 @@ const SignIn = () => {
       email,
       password,
     };
-      // const actionResult =
-       dispatch(loginUser(userCredentials))
+    dispatch(loginUser(userCredentials))
       .then((actionResult: { payload: any; }) => {
         const result = actionResult.payload;
         if(result){
@@ -66,14 +58,14 @@ const SignIn = () => {
                 sx={{
                   "& > :not(style)": { m: 1, width: "40ch" },
                 }}
-                noValidate
+                // noValidate
                 autoComplete="off"
               >
                 <TextField
-                  required
                   id="outlined-basic"
                   label="E-mail"
                   variant="outlined"
+                  required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -111,7 +103,8 @@ const SignIn = () => {
               {loading?'Loading..':'Login'}
             </Button>
             {error&&(
-              <div className="error-message" role="alert">{error}</div>
+              <div className="error-message">
+              <ErrorOutline /> {error}</div>
             )}
             <span className="span">
               Não possui conta? <NavLink to="/signup">Cadastre-se</NavLink>

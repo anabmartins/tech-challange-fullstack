@@ -35,6 +35,7 @@ body {
   width: 50%;
   height: 70%;
   border: solid 1px #bbbbbb;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -80,6 +81,15 @@ body {
   width: 12%;
   height: 4px;
   background-color: #2f88ff;
+}
+.error-message{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: .5rem 2rem;
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: #2f88ff;
 }
 
 @media screen and (max-width: 650px) {

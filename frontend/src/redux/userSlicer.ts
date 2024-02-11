@@ -1,13 +1,30 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from 'axios'
 
+interface UserCredentials {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export const loginUser = createAsyncThunk(
   'user/loginUser',
-  async(userCredentials: { email: string; password: string })=>{
-    const request = axios.post('http://localhost:8080/user', userCredentials) 
-    const response = (await request).data.data;
+  async(userCredentials: UserCredentials)=>{
+    const request = axios.post('http://localhost:8080/auth/login', userCredentials); 
+    const response = (await request).data;
     localStorage.setItem('user', JSON.stringify(response));
     console.log(response);
+    return response; 
+  }
+);
+
+export const registerUser = createAsyncThunk(
+  'user/registerUser',
+  async(userCredentials: UserCredentials)=>{
+    const request = axios.post('http://localhost:8080/user', userCredentials); 
+    const response = (await request).data;
+    // localStorage.setItem('user', JSON.stringify(response));
+    console.log(response.data);
     return response; 
   }
 );
@@ -43,7 +60,7 @@ const userSlice = createSlice({
     .addCase(loginUser.pending,(state)=>{
       state.loading = true;
       state.user = null;
-      state.error= null;
+      state.error = null;
     })
     .addCase(loginUser.fulfilled,(state,action)=>{
       state.loading = false;
@@ -61,6 +78,22 @@ const userSlice = createSlice({
         state.error = action.error?.message ?? 'An error occurred'; // nullish coalescing operator to provide a fallback message
       }
     })
+    // register user case
+    .addCase(registerUser.pending, (state) => {
+      state.loading = true;
+      state.user = null;
+      state.error = null;
+    })
+    .addCase(registerUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.user = action.payload;
+      state.error = null;
+    })
+    .addCase(registerUser.rejected, (state, action) => {
+      state.loading = false;
+      state.user = null;
+      state.error = action.error?.message ?? 'An error occurred';
+    });
   }
 });
 
