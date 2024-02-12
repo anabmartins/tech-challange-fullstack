@@ -92,6 +92,50 @@ body {
   color: #2f88ff;
 }
 
+.user-sec{
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 2rem;
+}
+
+.userName{
+  display: flex;
+  flex-direction: column;
+  margin-right: 1rem;
+  color: #464646;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.logout{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #929292;
+}
+.add-sec{
+  color:#2F88FF;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 70%;
+  font-size: 1rem;
+  gap: 10px;
+  margin: 2rem;
+  cursor: pointer;
+}
+.subtitle{
+  color:#2F88FF;
+  font-weight: bold;
+  font-size: 1.3rem;
+  width: 70%;
+}
 @media screen and (max-width: 650px) {
   .card {
     width: 70%;
