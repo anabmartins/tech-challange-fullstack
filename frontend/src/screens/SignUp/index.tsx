@@ -2,12 +2,13 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 // redux
 import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+
 // components
 import Footer from "../../components/footer";
 // material ui imports
 import {
   Button,
-  Box,
   IconButton,
   OutlinedInput,
   InputLabel,
@@ -15,8 +16,7 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-
-import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { registerUser } from "../../redux/userSlicer";
 
 const SignUp = () => {
@@ -34,10 +34,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // redux states
-  const { loading, error } = useSelector((state: any) => state.user);
-
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,13 +64,10 @@ const SignUp = () => {
           <span className="line"></span>
           <form className="form" onSubmit={handleRegisterEvent}>
             <div className="inputs">
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "40ch" },
-                }}
-                noValidate
-                autoComplete="off"
+              <FormControl
+                sx={{ m: 1, width: "40ch" }}
+                required
+                variant="outlined"
               >
                 <TextField
                   required
@@ -84,14 +78,11 @@ const SignUp = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
-              </Box>
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "40ch" },
-                }}
-                noValidate
-                autoComplete="off"
+              </FormControl>
+              <FormControl
+                sx={{ m: 1, width: "40ch" }}
+                required
+                variant="outlined"
               >
                 <TextField
                   fullWidth
@@ -102,10 +93,10 @@ const SignUp = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </Box>
+              </FormControl>
               <FormControl
                 sx={{ m: 1, width: "40ch" }}
-                // required
+                required
                 variant="outlined"
               >
                 <InputLabel htmlFor="outlined-adornment-password">
@@ -133,13 +124,8 @@ const SignUp = () => {
               </FormControl>
             </div>
             <Button variant="contained" className="btn-login" type="submit">
-            {loading?'Loading..':'Cadastrar'}
+              Cadastrar
             </Button>
-            {error && (
-              <div className="error-message">
-                <ErrorOutline /> {error}
-              </div>
-            )}
             <span className="span">
               Já possui conta? <NavLink to="/">Login</NavLink>
             </span>

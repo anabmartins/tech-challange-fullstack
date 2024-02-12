@@ -1,10 +1,20 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../redux/userSlicer";
 import Footer from "../../components/footer";
+// redux
+import { useDispatch, useSelector } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { loginUser } from "../../redux/userSlicer";
 // mui imports
-import { Button, Box, IconButton, OutlinedInput, InputLabel, InputAdornment,FormControl, TextField } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  FormControl,
+  TextField,
+} from "@mui/material";
 import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
 
 const SignIn = () => {
@@ -22,27 +32,30 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
 
   // redux states
-  const {loading, error} = useSelector((state:any)=>state.user);
+  const { loading, error } = useSelector((state: any) => state.user);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
   const navigate = useNavigate();
-  
-  const handleLoginEvent = async(e: React.FormEvent<HTMLFormElement>) => {
+
+  const handleLoginEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let userCredentials = {
       email,
       password,
     };
-    dispatch(loginUser(userCredentials))
-      .then((actionResult: { payload: any; }) => {
+
+    dispatch(loginUser(userCredentials)).then(
+      (actionResult: { payload: any }) => {
         const result = actionResult.payload;
-        if(result){
-          setEmail('');
-          setPassword('');
-          navigate('/manage')
-        };
-      })
-    }
+        if (result) {
+          setEmail("");
+          setPassword("");
+          navigate("/manage");
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -53,13 +66,10 @@ const SignIn = () => {
           <span className="line"></span>
           <form className="form" onSubmit={handleLoginEvent}>
             <div className="inputs">
-              <Box
-                component="form"
-                sx={{
-                  "& > :not(style)": { m: 1, width: "40ch" },
-                }}
-                // noValidate
-                autoComplete="off"
+              <FormControl
+                sx={{ m: 1, width: "40ch" }}
+                required
+                variant="outlined"
               >
                 <TextField
                   id="outlined-basic"
@@ -69,7 +79,7 @@ const SignIn = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-              </Box>
+              </FormControl>
               <FormControl
                 sx={{ m: 1, width: "40ch" }}
                 required
@@ -100,11 +110,12 @@ const SignIn = () => {
               </FormControl>
             </div>
             <Button variant="contained" className="btn-login" type="submit">
-              {loading?'Loading..':'Login'}
+              {loading ? "Loading.." : "Login"}
             </Button>
-            {error&&(
+            {error && (
               <div className="error-message">
-              <ErrorOutline /> {error}</div>
+                <ErrorOutline /> {error}
+              </div>
             )}
             <span className="span">
               Não possui conta? <NavLink to="/signup">Cadastre-se</NavLink>
