@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
@@ -13,7 +13,7 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
 
 // set the user logged in localstorage
@@ -27,20 +27,33 @@ function getUser(): JwtPayload | any {
 }
 
 const Manage = () => {
-  const [user, setUser] = useState<JwtPayload | any>(getUser());
   const navigate = useNavigate();
+
+  // verify if the user is logged
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("token") !== null;
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
+
+  const [user, setUser] = useState<JwtPayload | any>(getUser());
 
   // logout user
   const handleLogout = () => {
-     localStorage.removeItem("token");
-     setUser(null);
-     navigate("/");
-   };
+    localStorage.removeItem("token");
+    setUser(null);
+    navigate("/");
+  };
 
   // modal for inputs
   const [isModal, setModal] = useState(false);
-  const handleModal = () => {setModal(true)};
-  const closeModal = () => {setModal(false)};
+  const handleModal = () => {
+    setModal(true);
+  };
+  const closeModal = () => {
+    setModal(false);
+  };
 
   // state of the vehicle
   const [name, setName] = useState("");
@@ -58,7 +71,7 @@ const Manage = () => {
           </p>
           <img src={User} />
         </div>
-      
+
         <div className="card">
           <img src="/icon-park_car.svg" className="icon" />
           <h1 className="title">Gerenciamento</h1>
