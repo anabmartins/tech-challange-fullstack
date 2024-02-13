@@ -1,22 +1,15 @@
 import axios from "axios";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Post from "../models/postModel";
 import { AUTH_API, USER_API } from "../models/constants";
-
-interface UserCredentials {
-  name: string;
-  email: string;
-  password: string;
-}
+import { initialState, UserCredentials } from "../models/userModel";
 
 // Actions
 export const loginUser = createAsyncThunk(
   "user/loginUser",
   async (userCredentials: { email: string; password: string }) => {
-    const request = axios.post<Post[]>(AUTH_API, userCredentials);
+    const request = axios.post<any>(AUTH_API, userCredentials);
     const response = (await request).data;
-    // localStorage.setItem("user", JSON.stringify(response));
-    console.log(response);
+    localStorage.setItem("token", response.acees_token);
     return response;
   }
 );
@@ -26,23 +19,11 @@ export const registerUser = createAsyncThunk(
   async (userCredentials: UserCredentials) => {
     const request = axios.post(USER_API, userCredentials);
     const response = (await request).data;
-    // localStorage.setItem('user', JSON.stringify(response));
     console.log(response.data);
     return response;
   }
 );
 
-interface UserState {
-  loading: boolean;
-  user: null | any;
-  error: null | string;
-}
-
-const initialState: UserState = {
-  loading: false,
-  user: null,
-  error: null,
-};
 
 // Slice
 
@@ -76,7 +57,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = null;
         console.log(action.error.message);
-        if (action.error.message === "Request failed with status code 401") {
+        if (action.error.message === "Request failed with status code 500") {
           state.error = "Credenciais inválidas";
         } else {
           state.error = action.error?.message ?? "An error occurred"; // nullish coalescing operator to provide a fallback message

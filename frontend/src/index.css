@@ -136,6 +136,25 @@ body {
   font-size: 1.3rem;
   width: 70%;
 }
+.close-icon{
+  position: absolute;
+  right: 0;
+  margin-right: 2rem;
+  cursor: pointer;
+}
+.modal{
+  position: fixed;
+  width: 60%;
+  height: 80%;
+  background-color: #ffffff;
+  border: solid 1px #bbbbbb;
+  border-radius: 5px;
+  padding: 2rem;
+}
+.sb-modal{
+  padding: 1rem;
+  font-size: 1.5rem;
+}
 @media screen and (max-width: 650px) {
   .card {
     width: 70%;
