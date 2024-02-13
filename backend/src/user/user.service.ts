@@ -25,8 +25,8 @@ saltDrRounds);
   }
 
   //find a user by name
-  async findOne(name: string): Promise<User | undefined> {
-    return this.users.find(user => user.name === name);
+  async findOne(email: string): Promise<User | undefined> {
+    return this.users.find(user => user.email === email);
   }
 
   // search for all users in memory
