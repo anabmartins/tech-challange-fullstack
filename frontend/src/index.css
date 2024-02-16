@@ -13,7 +13,7 @@ body {
   margin: 0;
   padding: 0;
 }
-.title{
+.title {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
 }
@@ -82,7 +82,8 @@ body {
   height: 4px;
   background-color: #2f88ff;
 }
-.error-message, .message-register {
+.error-message,
+.message-register {
   position: fixed;
   top: 0;
   right: 0;
@@ -91,12 +92,12 @@ body {
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: .6rem 2.5rem;
+  padding: 0.6rem 2.5rem;
   font-size: 1rem;
   color: #2f88ff;
 }
 
-.user-sec{
+.user-sec {
   width: 50%;
   display: flex;
   align-items: center;
@@ -104,7 +105,7 @@ body {
   padding-bottom: 2rem;
 }
 
-.userName{
+.userName {
   display: flex;
   flex-direction: column;
   margin-right: 1rem;
@@ -112,7 +113,7 @@ body {
   font-size: 1.2rem;
   font-weight: bold;
 }
-.logout{
+.logout {
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -122,8 +123,8 @@ body {
   cursor: pointer;
   color: #929292;
 }
-.add-sec{
-  color:#2F88FF;
+.add-sec {
+  color: #2f88ff;
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -134,20 +135,20 @@ body {
   margin: 2rem;
   cursor: pointer;
 }
-.subtitle{
-  color:#2F88FF;
+.subtitle {
+  color: #2f88ff;
   font-weight: bold;
   font-size: 1.3rem;
   width: 70%;
 }
-.close-icon{
+.close-icon {
   position: absolute;
   right: 0;
   top: 0;
   margin: 2rem;
   cursor: pointer;
 }
-.modal{
+.modal {
   position: fixed;
   width: 60%;
   height: 80%;
@@ -160,18 +161,19 @@ body {
   align-items: center;
   justify-content: center;
 }
-.sb-modal{
+.sb-modal {
   padding: 1rem;
   font-size: 1.5rem;
   width: 100%;
   text-align: center;
 }
-.inputs, .form-vehicle{
+.inputs,
+.form-vehicle {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.inputs{
+.inputs {
   margin-bottom: 3rem;
 }
 
@@ -183,6 +185,6 @@ body {
     width: 20%;
   }
   .span {
-    font-size: .8rem;
+    font-size: 0.8rem;
   }
 }

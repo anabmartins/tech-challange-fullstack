@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 // redux
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
 // components
@@ -16,7 +16,11 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-import { Visibility, VisibilityOff, CheckCircleOutline } from "@mui/icons-material";
+import {
+  Visibility,
+  VisibilityOff,
+  CheckCircleOutline,
+} from "@mui/icons-material";
 import { registerUser } from "../../redux/userSlicer";
 
 const SignUp = () => {
@@ -35,7 +39,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [creationDate, setCreationDate] = useState<Date>();
   const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
-  const [message, setMessage]  = useState("")
+  const [message, setMessage] = useState("");
 
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
@@ -46,7 +50,7 @@ const SignUp = () => {
       email,
       password,
       creationDate,
-      lastUpdateDate
+      lastUpdateDate,
     };
     dispatch(registerUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
@@ -137,10 +141,9 @@ const SignUp = () => {
             </Button>
             {message && (
               <p className="message-register">
-              <CheckCircleOutline /> {message}
-            </p>
-              )
-            }
+                <CheckCircleOutline /> {message}
+              </p>
+            )}
             <span className="span">
               Já possui conta? <NavLink to="/">Login</NavLink>
             </span>

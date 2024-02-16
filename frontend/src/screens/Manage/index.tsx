@@ -1,20 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import User from "/user.svg";
 // mui imports
-import {
-  Button,
-  IconButton,
-  OutlinedInput,
-  InputLabel,
-  InputAdornment,
-  FormControl,
-  TextField,
-} from "@mui/material";
+import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
+import { useDispatch } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { createVehicle } from "../../redux/vehicleSlicer";
 
 // set the user logged in localstorage
 function getUser(): JwtPayload | any {
@@ -59,6 +54,32 @@ const Manage = () => {
   const [name, setName] = useState("");
   const [plate, setPlate] = useState("");
   const [model, setModel] = useState("");
+  const [creationDate, setCreationDate] = useState<Date>();
+  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
+
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
+  const handleVehicleEvent = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let newVehicle = {
+      name,
+      plate,
+      model,
+      creationDate,
+      lastUpdateDate,
+    };
+
+    dispatch(createVehicle(newVehicle)).then(
+      (actionResult: { payload: any }) => {
+        const result = actionResult.payload;
+        if (result) {
+          setName("");
+          setPlate("");
+          setModel("");
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -90,56 +111,59 @@ const Manage = () => {
             <div className="modal">
               <CloseIcon onClick={closeModal} className="close-icon" />
               <p className="subtitle sb-modal">Adicionar novo veículo</p>
-              <form className="form-vehicle">
+              <form className="form-vehicle" onSubmit={handleVehicleEvent}>
                 <div className="inputs">
-
-                <FormControl
-                  sx={{ m: 1, width: "40ch" }}
-                  required
-                  variant="outlined"
-                  >
-                  <p>Nome do veículo</p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Nome do veículo"
-                    variant="outlined"
+                  <FormControl
+                    sx={{ m: 1, width: "40ch" }}
                     required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    />
-                </FormControl>
-                <FormControl
-                  sx={{ m: 1, width: "40ch" }}
-                  required
-                  variant="outlined"
-                  >
-                  <p>Placa do veículo</p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Placa do veículo"
                     variant="outlined"
-                    required
-                    value={plate}
-                    onChange={(e) => setPlate(e.target.value)}
-                    />
-                </FormControl>
-                <FormControl
-                  sx={{ m: 1, width: "40ch" }}
-                  required
-                  variant="outlined"
                   >
-                  <p>Modelo do veículo</p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Modelo do veículo"
-                    variant="outlined"
-                    required
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
+                    <p>Nome do veículo</p>
+                    <TextField
+                      id="outlined-basic"
+                      label="Nome do veículo"
+                      variant="outlined"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     />
-                </FormControl>
-                    </div>
-                <Button variant="contained" className="btn-vehicle" type="submit">
+                  </FormControl>
+                  <FormControl
+                    sx={{ m: 1, width: "40ch" }}
+                    required
+                    variant="outlined"
+                  >
+                    <p>Placa do veículo</p>
+                    <TextField
+                      id="outlined-basic"
+                      label="Placa do veículo"
+                      variant="outlined"
+                      required
+                      value={plate}
+                      onChange={(e) => setPlate(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormControl
+                    sx={{ m: 1, width: "40ch" }}
+                    required
+                    variant="outlined"
+                  >
+                    <p>Modelo do veículo</p>
+                    <TextField
+                      id="outlined-basic"
+                      label="Modelo do veículo"
+                      variant="outlined"
+                      required
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                    />
+                  </FormControl>
+                </div>
+                <Button
+                  variant="contained"
+                  className="btn-vehicle"
+                  type="submit"
+                >
                   Cadastrar
                 </Button>
               </form>
