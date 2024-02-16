@@ -82,12 +82,16 @@ body {
   height: 4px;
   background-color: #2f88ff;
 }
-.error-message{
+.error-message, .message-register {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 2rem 4rem;
+  background-color: #bbbbbb;
   display: flex;
   align-items: center;
   gap: 5px;
-  padding: .5rem 2rem;
-  margin-top: 1rem;
+  padding: .6rem 2.5rem;
   font-size: 1rem;
   color: #2f88ff;
 }
@@ -139,7 +143,8 @@ body {
 .close-icon{
   position: absolute;
   right: 0;
-  margin-right: 2rem;
+  top: 0;
+  margin: 2rem;
   cursor: pointer;
 }
 .modal{
@@ -150,11 +155,26 @@ body {
   border: solid 1px #bbbbbb;
   border-radius: 5px;
   padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .sb-modal{
   padding: 1rem;
   font-size: 1.5rem;
+  width: 100%;
+  text-align: center;
 }
+.inputs, .form-vehicle{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inputs{
+  margin-bottom: 3rem;
+}
+
 @media screen and (max-width: 650px) {
   .card {
     width: 70%;

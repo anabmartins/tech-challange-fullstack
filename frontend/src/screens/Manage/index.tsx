@@ -57,6 +57,8 @@ const Manage = () => {
 
   // state of the vehicle
   const [name, setName] = useState("");
+  const [plate, setPlate] = useState("");
+  const [model, setModel] = useState("");
 
   return (
     <>
@@ -87,13 +89,16 @@ const Manage = () => {
           <>
             <div className="modal">
               <CloseIcon onClick={closeModal} className="close-icon" />
-              <p className="subtitle sb-modal">Adicionar veículo</p>
-              <form className="inputs">
+              <p className="subtitle sb-modal">Adicionar novo veículo</p>
+              <form className="form-vehicle">
+                <div className="inputs">
+
                 <FormControl
                   sx={{ m: 1, width: "40ch" }}
                   required
                   variant="outlined"
-                >
+                  >
+                  <p>Nome do veículo</p>
                   <TextField
                     id="outlined-basic"
                     label="Nome do veículo"
@@ -101,8 +106,42 @@ const Manage = () => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                  />
+                    />
                 </FormControl>
+                <FormControl
+                  sx={{ m: 1, width: "40ch" }}
+                  required
+                  variant="outlined"
+                  >
+                  <p>Placa do veículo</p>
+                  <TextField
+                    id="outlined-basic"
+                    label="Placa do veículo"
+                    variant="outlined"
+                    required
+                    value={plate}
+                    onChange={(e) => setPlate(e.target.value)}
+                    />
+                </FormControl>
+                <FormControl
+                  sx={{ m: 1, width: "40ch" }}
+                  required
+                  variant="outlined"
+                  >
+                  <p>Modelo do veículo</p>
+                  <TextField
+                    id="outlined-basic"
+                    label="Modelo do veículo"
+                    variant="outlined"
+                    required
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    />
+                </FormControl>
+                    </div>
+                <Button variant="contained" className="btn-vehicle" type="submit">
+                  Cadastrar
+                </Button>
               </form>
             </div>
           </>

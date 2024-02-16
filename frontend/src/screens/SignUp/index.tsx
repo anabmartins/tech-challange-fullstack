@@ -16,7 +16,7 @@ import {
   FormControl,
   TextField,
 } from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Visibility, VisibilityOff, CheckCircleOutline } from "@mui/icons-material";
 import { registerUser } from "../../redux/userSlicer";
 
 const SignUp = () => {
@@ -33,6 +33,9 @@ const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [creationDate, setCreationDate] = useState<Date>();
+  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
+  const [message, setMessage]  = useState("")
 
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
@@ -42,6 +45,8 @@ const SignUp = () => {
       name,
       email,
       password,
+      creationDate,
+      lastUpdateDate
     };
     dispatch(registerUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
@@ -50,6 +55,10 @@ const SignUp = () => {
           setName("");
           setEmail("");
           setPassword("");
+          setMessage("Usuário cadastrado com sucesso!");
+          setTimeout(() => {
+            setMessage("");
+          }, 2000);
         }
       }
     );
@@ -126,6 +135,12 @@ const SignUp = () => {
             <Button variant="contained" className="btn-login" type="submit">
               Cadastrar
             </Button>
+            {message && (
+              <p className="message-register">
+              <CheckCircleOutline /> {message}
+            </p>
+              )
+            }
             <span className="span">
               Já possui conta? <NavLink to="/">Login</NavLink>
             </span>
