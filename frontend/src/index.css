@@ -23,7 +23,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   width: 100%;
 }
 .login {
@@ -31,9 +31,8 @@ body {
 }
 .card {
   background-color: #ffffff;
-  /* padding: 2rem; */
+  padding: 4rem 0rem;
   width: 50%;
-  height: 70%;
   border: solid 1px #bbbbbb;
   border-radius: 5px;
   display: flex;
@@ -41,6 +40,31 @@ body {
   align-items: center;
   justify-content: center;
 }
+.list{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  width: 70%;
+}
+.vehicleCard{
+  border: 1px solid #BBBBBB;
+  padding: .5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem 2rem;
+  gap: 0.2rem;
+}
+
+.card-title{
+  font-size: 1.2rem;
+  color: #4E4E4E;
+  font-weight: bold;
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -87,12 +111,7 @@ body {
   position: fixed;
   top: 0;
   right: 0;
-  margin: 2rem 4rem;
-  background-color: #bbbbbb;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 0.6rem 2.5rem;
+  margin: 2rem 4rem;  
   font-size: 1rem;
   color: #2f88ff;
 }
@@ -102,7 +121,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 2rem;
+  margin: 4rem 0rem;
 }
 
 .userName {
@@ -172,6 +191,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.inputs p{
+  color: #2f88ff;
+  
 }
 .inputs {
   margin-bottom: 3rem;

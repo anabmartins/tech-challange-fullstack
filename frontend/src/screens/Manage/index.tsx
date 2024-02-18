@@ -7,9 +7,10 @@ import User from "/user.svg";
 import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
-import { useDispatch } from "react-redux";
+import { createVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
+import { RootState } from "../../models/vehicleModel";
+import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import { createVehicle } from "../../redux/vehicleSlicer";
 
 // set the user logged in localstorage
 function getUser(): JwtPayload | any {
@@ -23,6 +24,12 @@ function getUser(): JwtPayload | any {
 
 const Manage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const vehicles = useSelector((state: RootState) => state.vehicles);
+
+  useEffect(() => {
+  dispatch(fetchVehicle());
+  }, [dispatch]);
 
   // verify if the user is logged
   useEffect(() => {
@@ -54,10 +61,7 @@ const Manage = () => {
   const [name, setName] = useState("");
   const [plate, setPlate] = useState("");
   const [model, setModel] = useState("");
-  const [creationDate, setCreationDate] = useState<Date>();
-  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
-
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  const [year, setYear] = useState("");
 
   const handleVehicleEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,8 +69,7 @@ const Manage = () => {
       name,
       plate,
       model,
-      creationDate,
-      lastUpdateDate,
+      year
     };
 
     dispatch(createVehicle(newVehicle)).then(
@@ -76,6 +79,7 @@ const Manage = () => {
           setName("");
           setPlate("");
           setModel("");
+          setYear("");
         }
       }
     );
@@ -104,7 +108,15 @@ const Manage = () => {
             adicionar
           </p>
           <p className="subtitle">Lista de veículos</p>
-          <div className="list"></div>
+          <div className="list">
+            {vehicles.map((vehicle, index) => (
+              <div key={index} className="vehicleCard">
+                <span className="card-title">{vehicle.name}</span>
+                <span className="card-sub">{vehicle.plate}</span>
+                <span className="card-text">{vehicle.model}</span>
+              </div>
+            ))}
+          </div>
         </div>
         {isModal && (
           <>
@@ -118,7 +130,7 @@ const Manage = () => {
                     required
                     variant="outlined"
                   >
-                    <p>Nome do veículo</p>
+                    <span>Nome</span>
                     <TextField
                       id="outlined-basic"
                       label="Nome do veículo"
@@ -133,7 +145,7 @@ const Manage = () => {
                     required
                     variant="outlined"
                   >
-                    <p>Placa do veículo</p>
+                    <span>Placa</span>
                     <TextField
                       id="outlined-basic"
                       label="Placa do veículo"
@@ -148,7 +160,7 @@ const Manage = () => {
                     required
                     variant="outlined"
                   >
-                    <p>Modelo do veículo</p>
+                    <span>Modelo</span>
                     <TextField
                       id="outlined-basic"
                       label="Modelo do veículo"
@@ -156,6 +168,22 @@ const Manage = () => {
                       required
                       value={model}
                       onChange={(e) => setModel(e.target.value)}
+                    />
+                  </FormControl>
+                  <FormControl
+                    sx={{ m: 1, width: "40ch" }}
+                    required
+                    variant="outlined"
+                  >
+                    <span>Ano</span>
+                    <TextField
+                      id="outlined-basic"
+                      label="Ano do veículo"
+                      variant="outlined"
+                      type="number"
+                      required
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
                     />
                   </FormControl>
                 </div>

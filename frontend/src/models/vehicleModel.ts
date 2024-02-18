@@ -1,4 +1,5 @@
 export interface Vehicle {
+  id: number;
   name: string;
   plate: string;
   model: string;
@@ -6,14 +7,17 @@ export interface Vehicle {
   lastUpdateDate: Date;
 }
 
-interface VehicleState {
-  loading: boolean;
-  vehicle: null | any;
-  error: null | string;
+export interface RootState {
+  vehicles: VehicleList[]
 }
 
-export const initialState: VehicleState = {
-  loading: false,
-  vehicle: null,
-  error: null,
+export interface VehicleList {
+  name: string;
+  plate: string;
+  model: string;
+  year: number
+}
+
+export const initialState: RootState = {
+  vehicles: []
 };

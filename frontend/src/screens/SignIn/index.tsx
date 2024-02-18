@@ -14,8 +14,9 @@ import {
   InputAdornment,
   FormControl,
   TextField,
+  Alert
 } from "@mui/material";
-import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
+import { Visibility, VisibilityOff, ErrorOutline, Check } from "@mui/icons-material";
 
 const SignIn = () => {
   // show and hide password feature
@@ -114,7 +115,9 @@ const SignIn = () => {
             </Button>
             {error && (
               <div className="error-message">
-                <ErrorOutline /> {error}
+              <Alert icon={<ErrorOutline fontSize="inherit" />} severity="error">
+               {error}
+              </Alert>
               </div>
             )}
             <span className="span">

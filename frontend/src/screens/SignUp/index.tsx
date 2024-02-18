@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-// redux
-import { useDispatch } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
 
 // components
 import Footer from "../../components/footer";
@@ -15,6 +12,7 @@ import {
   InputAdornment,
   FormControl,
   TextField,
+  Alert,
 } from "@mui/material";
 import {
   Visibility,
@@ -22,8 +20,12 @@ import {
   CheckCircleOutline,
 } from "@mui/icons-material";
 import { registerUser } from "../../redux/userSlicer";
+import { useDispatch } from "react-redux";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const SignUp = () => {
+  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  
   // show password
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -40,8 +42,6 @@ const SignUp = () => {
   const [creationDate, setCreationDate] = useState<Date>();
   const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
   const [message, setMessage] = useState("");
-
-  const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
 
   const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -62,7 +62,7 @@ const SignUp = () => {
           setMessage("Usuário cadastrado com sucesso!");
           setTimeout(() => {
             setMessage("");
-          }, 2000);
+          }, 5000);
         }
       }
     );
@@ -140,9 +140,11 @@ const SignUp = () => {
               Cadastrar
             </Button>
             {message && (
-              <p className="message-register">
-                <CheckCircleOutline /> {message}
-              </p>
+              <div className="message-register">
+                <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="success">
+                {message}
+                </Alert>
+              </div>
             )}
             <span className="span">
               Já possui conta? <NavLink to="/">Login</NavLink>

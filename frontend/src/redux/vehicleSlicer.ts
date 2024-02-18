@@ -1,23 +1,28 @@
 import axios from "axios";
-import { initialState, Vehicle } from "../models/vehicleModel";
+import { VehicleList, initialState } from "../models/vehicleModel";
 import { VEHICLE_API } from "../models/constants";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 // Action
 
 export const createVehicle = createAsyncThunk(
   "vehicle/createVehicle",
-  async (newVehicle: Vehicle) => {
+  async (newVehicle: {name: string, plate: string, model: string}) => {
     const request = axios.post<any>(VEHICLE_API, newVehicle);
     const response = (await request).data;
     return response;
   }
 );
 
-export const listVehicle = createAsyncThunk("vehicle/listVehicle", async () => {
-  const request = axios.get<any>(VEHICLE_API);
-  const response = (await request).data;
-  return response;
+export const fetchVehicle = createAsyncThunk(
+  "vehicle/fetchVehicle", 
+  async () => {
+  try {
+    const response = await axios.get<VehicleList[]>(VEHICLE_API);
+    return response.data;
+  } catch (error) {
+    throw error; 
+  }
 });
 
 // Slicer
