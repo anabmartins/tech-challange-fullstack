@@ -6,4 +6,5 @@ import { VehicleController } from './vehicle.controller';
   providers: [VehicleService],
   controllers: [VehicleController]
 })
+
 export class VehicleModule {}

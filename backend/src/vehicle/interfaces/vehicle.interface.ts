@@ -3,6 +3,7 @@ export interface Vehicle {
   name: string;
   plate: string;
   model: string;
-  creationDate: Date;
-  lastUpdateDate: Date;
+  year: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
