@@ -8,7 +8,7 @@ import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
 import { createVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
-import { RootState } from "../../models/vehicleModel";
+import { RootState, initialState } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
 
@@ -109,7 +109,7 @@ const Manage = () => {
           </p>
           <p className="subtitle">Lista de veículos</p>
           <div className="list">
-            {vehicles.map((vehicle, index) => (
+            {vehicles?.map((vehicle, index) => (
               <div key={index} className="vehicleCard">
                 <span className="card-title">{vehicle.name}</span>
                 <span className="card-sub">{vehicle.plate}</span>

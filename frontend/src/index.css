@@ -31,14 +31,15 @@ body {
 }
 .card {
   background-color: #ffffff;
-  padding: 4rem 0rem;
+  padding: 7rem 0rem;
   width: 50%;
+  min-height: 70vh;
   border: solid 1px #bbbbbb;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .list{
   display: grid;
@@ -151,7 +152,7 @@ body {
   width: 70%;
   font-size: 1rem;
   gap: 10px;
-  margin: 2rem;
+  margin: 4rem;
   cursor: pointer;
 }
 .subtitle {
@@ -174,6 +175,7 @@ body {
   background-color: #ffffff;
   border: solid 1px #bbbbbb;
   border-radius: 5px;
+  margin-top: -8rem;
   padding: 2rem;
   display: flex;
   flex-direction: column;

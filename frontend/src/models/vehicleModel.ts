@@ -3,8 +3,6 @@ export interface Vehicle {
   name: string;
   plate: string;
   model: string;
-  creationDate: Date;
-  lastUpdateDate: Date;
 }
 
 export interface RootState {
@@ -15,7 +13,7 @@ export interface VehicleList {
   name: string;
   plate: string;
   model: string;
-  year: number
+  year: number;
 }
 
 export const initialState: RootState = {

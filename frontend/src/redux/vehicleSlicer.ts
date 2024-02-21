@@ -1,5 +1,5 @@
 import axios from "axios";
-import { VehicleList, initialState } from "../models/vehicleModel";
+import { VehicleList } from "../models/vehicleModel";
 import { VEHICLE_API } from "../models/constants";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -26,13 +26,18 @@ export const fetchVehicle = createAsyncThunk(
 });
 
 // Slicer
+const initialState: VehicleList[] = [];
 
 const vehicleSlice = createSlice({
   name: "vehicle",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder;
+    builder
+    .addCase(fetchVehicle.fulfilled, (_state, action) => {
+      // Update the state with the fetched data
+      return action.payload;
+    });
   },
 });
 
