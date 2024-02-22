@@ -7,10 +7,10 @@ import User from "/user.svg";
 import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
-import { createVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
-import { RootState, initialState } from "../../models/vehicleModel";
+import { createVehicle, fetchVehicle, selectAllVehicles } from "../../redux/vehicleSlicer";
+import { RootState, VehicleList } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch } from "@reduxjs/toolkit";
+import { ThunkDispatch, createAsyncThunk } from "@reduxjs/toolkit";
 
 // set the user logged in localstorage
 function getUser(): JwtPayload | any {
@@ -25,11 +25,13 @@ function getUser(): JwtPayload | any {
 const Manage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  const vehicles = useSelector((state: RootState) => state.vehicles);
-
+  const vehicles = useSelector((state: RootState) => state.vehicle);
+  
   useEffect(() => {
-  dispatch(fetchVehicle());
+    dispatch(fetchVehicle());
   }, [dispatch]);
+
+  console.log(vehicles);
 
   // verify if the user is logged
   useEffect(() => {
@@ -69,7 +71,7 @@ const Manage = () => {
       name,
       plate,
       model,
-      year
+      year,
     };
 
     dispatch(createVehicle(newVehicle)).then(
@@ -99,7 +101,7 @@ const Manage = () => {
           <img src={User} />
         </div>
 
-        <div className="card">
+        <div className="card manage">
           <img src="/icon-park_car.svg" className="icon" />
           <h1 className="title">Gerenciamento</h1>
           <div className="line"></div>
@@ -109,13 +111,16 @@ const Manage = () => {
           </p>
           <p className="subtitle">Lista de veículos</p>
           <div className="list">
-            {vehicles?.map((vehicle, index) => (
-              <div key={index} className="vehicleCard">
-                <span className="card-title">{vehicle.name}</span>
-                <span className="card-sub">{vehicle.plate}</span>
-                <span className="card-text">{vehicle.model}</span>
-              </div>
-            ))}
+            {vehicles &&
+              vehicles.map((vehicle, index) => (
+                <div key={index} className="vehicleCard">
+                  <span className="card-title">{vehicle.name}</span>
+                  <span className="card-sub">{vehicle.plate}</span>
+                  <span className="card-text">
+                    {vehicle.model}, {vehicle.year}
+                  </span>
+                </div>
+              ))}
           </div>
         </div>
         {isModal && (

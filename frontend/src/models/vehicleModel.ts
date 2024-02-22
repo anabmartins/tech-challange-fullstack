@@ -6,7 +6,7 @@ export interface Vehicle {
 }
 
 export interface RootState {
-  vehicles: VehicleList[]
+  vehicle: VehicleList[];
 }
 
 export interface VehicleList {
@@ -17,5 +17,5 @@ export interface VehicleList {
 }
 
 export const initialState: RootState = {
-  vehicles: []
+  vehicle: []
 };

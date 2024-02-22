@@ -13,8 +13,9 @@ export class VehicleController {
     return this.vehicleService.createVehicle(createVehicle);
   }
   
+  // get data
   @Get()
-  async getAllUser() {
+  async getAllVehicles() {
     return this.vehicleService.getAllVehicles();
   }
 }
