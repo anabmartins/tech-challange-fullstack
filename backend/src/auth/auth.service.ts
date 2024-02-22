@@ -16,9 +16,13 @@ export class AuthService {
     pass: string
     ): Promise<{ acees_token: string }> {
     const user = await this.userService.findOne(email);
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    
     const isMatch = await bcrypt.compare(pass, user.password);
     if(!isMatch) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid credentials');
     }
     const payload = { sub: user.userId, email: user.email, name: user.name };
     return {

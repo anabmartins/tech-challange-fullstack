@@ -25,7 +25,23 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 
 const SignUp = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
-  
+  // name, email and password states
+  const initialUserState = {
+    name: "",
+    email: "",
+    password: "",
+  };
+
+  const [message, setMessage] = useState("");
+  const [user, setUser] = useState(initialUserState);
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
+
   // show password
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -35,30 +51,23 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-  // name, email and password states
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [creationDate, setCreationDate] = useState<Date>();
-  const [lastUpdateDate, setLastUpdateDate] = useState<Date>();
-  const [message, setMessage] = useState("");
-
   const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let userCredentials = {
-      name,
-      email,
-      password,
-      creationDate,
-      lastUpdateDate,
+      name: user.name,
+      email: user.email,
+      password: user.password,
     };
     dispatch(registerUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
         const result = actionResult.payload;
         if (result) {
-          setName("");
-          setEmail("");
-          setPassword("");
+          setUser((prevUser) => ({
+            ...prevUser,
+            name: "",
+            email: "",
+            password: "",
+          }));
           setMessage("Usuário cadastrado com sucesso!");
           setTimeout(() => {
             setMessage("");
@@ -88,8 +97,9 @@ const SignUp = () => {
                   id="outlined-basic"
                   label="Nome completo"
                   variant="outlined"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  name="name"
+                  value={user.name}
+                  onChange={handleChange}
                 />
               </FormControl>
               <FormControl
@@ -100,11 +110,13 @@ const SignUp = () => {
                 <TextField
                   fullWidth
                   required
+                  type="e-mail"
                   id="outlined-basic"
                   label="E-mail"
                   variant="outlined"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
                 />
               </FormControl>
               <FormControl
@@ -117,8 +129,9 @@ const SignUp = () => {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={user.password}
+                  onChange={handleChange}
                   type={showPassword ? "text" : "password"}
                   endAdornment={
                     <InputAdornment position="end">
@@ -141,8 +154,11 @@ const SignUp = () => {
             </Button>
             {message && (
               <div className="message-register">
-                <Alert icon={<CheckCircleOutline fontSize="inherit" />} severity="success">
-                {message}
+                <Alert
+                  icon={<CheckCircleOutline fontSize="inherit" />}
+                  severity="success"
+                >
+                  {message}
                 </Alert>
               </div>
             )}

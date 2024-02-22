@@ -58,7 +58,11 @@ const userSlice = createSlice({
         console.log(action.error.message);
         if (action.error.message === "Request failed with status code 500") {
           state.error = "Credenciais inválidas";
-        } else {
+        } 
+        else if(action.error.message === "Request failed with status code 401"){
+          state.error = "Login ou senha inválidas";
+        }
+        else {
           state.error = action.error?.message ?? "An error occurred"; // nullish coalescing operator to provide a fallback message
         }
       })

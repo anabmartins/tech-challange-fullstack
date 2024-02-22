@@ -35,8 +35,6 @@ const Manage = () => {
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  console.log(vehicles);
-
   // verify if the user is logged
   useEffect(() => {
     const isAuthenticated = localStorage.getItem("token") !== null;

@@ -16,9 +16,10 @@ import {
   TextField,
   Alert
 } from "@mui/material";
-import { Visibility, VisibilityOff, ErrorOutline, Check } from "@mui/icons-material";
+import { Visibility, VisibilityOff, ErrorOutline } from "@mui/icons-material";
 
 const SignIn = () => {
+
   // show and hide password feature
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -29,8 +30,18 @@ const SignIn = () => {
   };
 
   // email and password states
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const initialUserState = {
+    email: "",
+    password: "",
+  };
+  const [user, setUser] = useState(initialUserState);
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
 
   // redux states
   const { loading, error } = useSelector((state: any) => state.user);
@@ -42,22 +53,21 @@ const SignIn = () => {
   const handleLoginEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let userCredentials = {
-      email,
-      password,
+      email: user.email,
+      password: user.password,
     };
 
     dispatch(loginUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
         const result = actionResult.payload;
         if (result) {
-          setEmail("");
-          setPassword("");
           navigate("/manage");
         }
       }
     );
   };
 
+  
   return (
     <>
       <section className="main login">
@@ -77,8 +87,9 @@ const SignIn = () => {
                   label="E-mail"
                   variant="outlined"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={user.email}
+                  onChange={handleChange}
                 />
               </FormControl>
               <FormControl
@@ -91,8 +102,9 @@ const SignIn = () => {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  value={user.password}
+                  onChange={handleChange}
                   type={showPassword ? "text" : "password"}
                   endAdornment={
                     <InputAdornment position="end">
