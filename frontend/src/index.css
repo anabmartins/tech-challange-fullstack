@@ -53,8 +53,13 @@ body {
   gap: 1.1rem;
   width: 70%;
 }
+.car-placeholder{
+  max-width: 100%;
+  margin: 1rem 0rem;
+}
 .vehicleCard{
   border: 1px solid #BBBBBB;
+  border-radius: 5px;
   padding: .5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -204,6 +209,23 @@ body {
 }
 .inputs {
   margin-bottom: 3rem;
+}
+.icons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.icons span{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 14px;
+  color: #2f88ff;
 }
 
 @media screen and (max-width: 650px) {

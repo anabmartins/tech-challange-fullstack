@@ -7,10 +7,10 @@ import User from "/user.svg";
 import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
-import { createVehicle, fetchVehicle, selectAllVehicles } from "../../redux/vehicleSlicer";
-import { RootState, VehicleList } from "../../models/vehicleModel";
+import { createVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
+import { RootState } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
-import { ThunkDispatch, createAsyncThunk } from "@reduxjs/toolkit";
+import { ThunkDispatch } from "@reduxjs/toolkit";
 
 // set the user logged in localstorage
 function getUser(): JwtPayload | any {
@@ -26,9 +26,13 @@ const Manage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const vehicles = useSelector((state: RootState) => state.vehicle);
-  
+
   useEffect(() => {
     dispatch(fetchVehicle());
+    const interval = setInterval(() => {
+      dispatch(fetchVehicle());
+    }, 1000); // Atualiza a lista de veículos a cada 5 segundos
+    return () => clearInterval(interval);
   }, [dispatch]);
 
   console.log(vehicles);
@@ -111,16 +115,26 @@ const Manage = () => {
           </p>
           <p className="subtitle">Lista de veículos</p>
           <div className="list">
-            {vehicles &&
-              vehicles.map((vehicle, index) => (
-                <div key={index} className="vehicleCard">
-                  <span className="card-title">{vehicle.name}</span>
-                  <span className="card-sub">{vehicle.plate}</span>
-                  <span className="card-text">
-                    {vehicle.model}, {vehicle.year}
+            {vehicles?.map((vehicle, index) => (
+              <div key={index} className="vehicleCard">
+                <img src="/carplaceholder.png" className="car-placeholder" />
+                <span className="card-title">{vehicle.name}</span>
+                <span className="card-sub">{vehicle.plate}</span>
+                <span className="card-text">
+                  {vehicle.model}, {vehicle.year}
+                </span>
+                <div className="icons">
+                  <span>
+                    <img src="/edit.svg" />
+                    Editar
+                  </span>
+                  <span>
+                    <img src="/trash.svg" />
+                    Excluir
                   </span>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </div>
         {isModal && (
