@@ -3,5 +3,5 @@ export interface Vehicle {
   name: string;
   plate: string;
   model: string;
-  year: number;
+  year: string | number;
 }

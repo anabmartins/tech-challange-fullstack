@@ -7,7 +7,7 @@ import User from "/user.svg";
 import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
-import { createVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
+import { createVehicle, deleteVehicle, editVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
 import { RootState } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
@@ -51,6 +51,23 @@ const Manage = () => {
     setUser(null);
     navigate("/");
   };
+
+  const handleEditVehicle = async (vehicleToEdit: any) => {
+    try {
+      await dispatch(editVehicle(vehicleToEdit));
+    } catch (error) {
+      console.error("Failed to edit vehicle: ", error);
+    }
+  };
+
+  const handleDeleteVehicle = async (vehicleId: number) => {
+    try {
+      await dispatch(deleteVehicle(vehicleId));
+    } catch (error) {
+      console.error("Failed to delete vehicle: ", error);
+    }
+  };
+
 
   // modal for inputs
   const [isModal, setModal] = useState(false);
@@ -122,11 +139,11 @@ const Manage = () => {
                   {vehicle.model}, {vehicle.year}
                 </span>
                 <div className="icons">
-                  <span>
+                  <span onClick={() => handleEditVehicle(vehicle)}>
                     <img src="/edit.svg" />
                     Editar
                   </span>
-                  <span>
+                  <span onClick={() => handleDeleteVehicle(vehicle.id)}>
                     <img src="/trash.svg" />
                     Excluir
                   </span>

@@ -1,5 +1,14 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Delete,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { createVehicleDto } from './dtos/createVehicle.dto';
+import { updateVehicleDto } from './dtos/updateVehicle.dto';
 import { VehicleService } from './vehicle.service';
 import { Vehicle } from './interfaces/vehicle.interface';
 
@@ -9,13 +18,36 @@ export class VehicleController {
 
   // insert data
   @Post()
-  async createVehicle(@Body() createVehicle: createVehicleDto): Promise<Vehicle> {
+  async createVehicle(
+    @Body() createVehicle: createVehicleDto,
+  ): Promise<Vehicle> {
     return this.vehicleService.createVehicle(createVehicle);
   }
-  
+
   // get data
   @Get()
   async getAllVehicles() {
     return this.vehicleService.getAllVehicles();
+  }
+
+  // get single data
+  @Get(':id')
+  async getVehicleById(@Param('id') id: string): Promise<Vehicle> {
+    return this.vehicleService.getVehicleById(id);
+  }
+
+  // update data
+  @Patch(':id')
+  async updateVehicle(
+    @Param('id') id: string,
+    @Body() updateVehicle: updateVehicleDto,
+  ): Promise<Vehicle> {
+    return this.vehicleService.updateVehicle(id, updateVehicle);
+  }
+
+  // delete data
+  @Delete(':id')
+  async deleteVehicle(@Param('id') id: string): Promise<void> {
+    return this.vehicleService.deleteVehicle(id);
   }
 }
