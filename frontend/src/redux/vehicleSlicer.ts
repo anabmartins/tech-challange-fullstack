@@ -65,10 +65,6 @@ const vehicleSlice = createSlice({
         // Update the state with the fetched data
         return action.payload;
       })
-      .addCase(fetchVehicle.fulfilled, (_state, action) => {
-        // Update the state with the fetched data
-        return action.payload;
-      })
       .addCase(editVehicle.fulfilled, (state, action) => {
         // Update the state with the edited data
         const index = state.findIndex(
