@@ -168,7 +168,7 @@ body {
   color: #2f88ff;
   font-weight: bold;
   font-size: 1.3rem;
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
   width: 70%;
 }
 .close-icon {
@@ -209,6 +209,10 @@ body {
 }
 .inputs {
   margin-bottom: 3rem;
+}
+.inputs span{
+  color: #2f88ff;
+  margin-bottom: 10px;
 }
 .icons{
   display: flex;

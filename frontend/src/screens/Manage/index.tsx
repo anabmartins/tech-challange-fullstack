@@ -7,7 +7,12 @@ import User from "/user.svg";
 import { Button, FormControl, TextField } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
-import { createVehicle, deleteVehicle, editVehicle, fetchVehicle } from "../../redux/vehicleSlicer";
+import {
+  createVehicle,
+  deleteVehicle,
+  editVehicle,
+  fetchVehicle,
+} from "../../redux/vehicleSlicer";
 import { RootState } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
@@ -23,9 +28,21 @@ function getUser(): JwtPayload | any {
 }
 
 const Manage = () => {
+  // state of the vehicle
+  const vehicleValues = {
+    id: "",
+    name: "",
+    plate: "",
+    model: "",
+    year: "",
+  };
   const navigate = useNavigate();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const vehicles = useSelector((state: RootState) => state.vehicle);
+  const [vehicle, setVehicle] = useState(vehicleValues);
+  const [message, setMessage] = useState("");
+  const [title, setTitle] = useState("Adicionar novo");
+  const [btnValue, setBtnValue] = useState("Cadastrar");
 
   useEffect(() => {
     dispatch(fetchVehicle());
@@ -53,6 +70,10 @@ const Manage = () => {
   };
 
   const handleEditVehicle = async (vehicleToEdit: any) => {
+    handleModal();
+    setTitle("Editar");
+    setVehicle(vehicleToEdit);
+    setBtnValue("Editar");
     try {
       await dispatch(editVehicle(vehicleToEdit));
     } catch (error) {
@@ -68,42 +89,48 @@ const Manage = () => {
     }
   };
 
-
   // modal for inputs
   const [isModal, setModal] = useState(false);
   const handleModal = () => {
     setModal(true);
+    setTitle("Adicionar novo");
+    setVehicle(vehicleValues);
+    setBtnValue("Adicionar");
   };
   const closeModal = () => {
     setModal(false);
   };
 
-  // state of the vehicle
-  const [name, setName] = useState("");
-  const [plate, setPlate] = useState("");
-  const [model, setModel] = useState("");
-  const [year, setYear] = useState("");
-
   const handleVehicleEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let newVehicle = {
-      name,
-      plate,
-      model,
-      year,
+      name: vehicle.name,
+      plate: vehicle.plate,
+      model: vehicle.plate,
+      year: vehicle.year,
     };
 
     dispatch(createVehicle(newVehicle)).then(
       (actionResult: { payload: any }) => {
         const result = actionResult.payload;
         if (result) {
-          setName("");
-          setPlate("");
-          setModel("");
-          setYear("");
+          setVehicle((prevVehicle) => ({
+            ...prevVehicle,
+            name: "",
+            plate: "",
+            model: "",
+            year: "",
+          }));
         }
       }
     );
+  };
+  const handleChange = (e: { target: { name: any; value: any } }) => {
+    const { name, value } = e.target;
+    setVehicle((prevVehicle) => ({
+      ...prevVehicle,
+      [name]: value,
+    }));
   };
 
   return (
@@ -156,7 +183,7 @@ const Manage = () => {
           <>
             <div className="modal">
               <CloseIcon onClick={closeModal} className="close-icon" />
-              <p className="subtitle sb-modal">Adicionar novo veículo</p>
+              <p className="subtitle sb-modal">{title} veículo</p>
               <form className="form-vehicle" onSubmit={handleVehicleEvent}>
                 <div className="inputs">
                   <FormControl
@@ -170,8 +197,9 @@ const Manage = () => {
                       label="Nome do veículo"
                       variant="outlined"
                       required
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      name="name"
+                      value={vehicle.name}
+                      onChange={handleChange}
                     />
                   </FormControl>
                   <FormControl
@@ -185,8 +213,9 @@ const Manage = () => {
                       label="Placa do veículo"
                       variant="outlined"
                       required
-                      value={plate}
-                      onChange={(e) => setPlate(e.target.value)}
+                      name="plate"
+                      value={vehicle.plate.toUpperCase()}
+                      onChange={handleChange}
                     />
                   </FormControl>
                   <FormControl
@@ -200,8 +229,9 @@ const Manage = () => {
                       label="Modelo do veículo"
                       variant="outlined"
                       required
-                      value={model}
-                      onChange={(e) => setModel(e.target.value)}
+                      name="model"
+                      value={vehicle.model}
+                      onChange={handleChange}
                     />
                   </FormControl>
                   <FormControl
@@ -216,18 +246,29 @@ const Manage = () => {
                       variant="outlined"
                       type="number"
                       required
-                      value={year}
-                      onChange={(e) => setYear(e.target.value)}
+                      name="year"
+                      value={vehicle.year}
+                      onChange={handleChange}
                     />
                   </FormControl>
                 </div>
-                <Button
-                  variant="contained"
-                  className="btn-vehicle"
-                  type="submit"
-                >
-                  Cadastrar
-                </Button>
+                {vehicle.id ? (
+                  <Button
+                    variant="contained"
+                    className="btn-vehicle"
+                    type="submit"
+                  >
+                    Editar
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    className="btn-vehicle"
+                    type="submit"
+                  >
+                    Cadastrar
+                  </Button>
+                )}
               </form>
             </div>
           </>
