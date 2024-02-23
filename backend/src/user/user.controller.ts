@@ -5,16 +5,20 @@ import { User } from './interfaces/user.interface';
 
 @Controller('user')
 export class UserController {
+  
   constructor(private readonly userService: UserService) {}
 
   // insert data
   @Post()
-  async createUser(@Body() createUser: CreateUserDto) {
+  async createUser(
+    @Body() createUser: CreateUserDto) {
     return this.userService.insertUser(createUser);
   }
   
+  // get data
   @Get()
   async getAllUser() {
-    return this.userService.getAllUser();
+    const users = this.userService.getAllUser();
+    return users;
   }
 }

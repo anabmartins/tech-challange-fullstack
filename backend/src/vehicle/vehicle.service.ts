@@ -2,10 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { createVehicleDto } from './dtos/createVehicle.dto';
 import { updateVehicleDto } from './dtos/updateVehicle.dto';
 import { Vehicle } from './interfaces/vehicle.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class VehicleService {
   private vehicles: Vehicle[] = [];
+
+  constructor(@InjectModel('Vehicle') private readonly vehicleModel: Model<Vehicle>) {}
+
+  // insert new vehicle in database
+  async insertVehicle(createVehicleDto: createVehicleDto){
+    const newVehicle = new this.vehicleModel({
+      ...createVehicleDto,
+      id: this.vehicles.length + 1,
+      plate: createVehicleDto.plate.toUpperCase(),
+    });
+    const result = await newVehicle.save();
+    return result.id as string;
+  }
 
   async createVehicle(createVehicleDto: createVehicleDto): Promise<Vehicle> {
     const vehicle: Vehicle = {

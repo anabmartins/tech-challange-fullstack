@@ -19,9 +19,8 @@ export class VehicleController {
   // insert data
   @Post()
   async createVehicle(
-    @Body() createVehicle: createVehicleDto,
-  ): Promise<Vehicle> {
-    return this.vehicleService.createVehicle(createVehicle);
+    @Body() createVehicle: createVehicleDto) {
+    return this.vehicleService.insertVehicle(createVehicle);
   }
 
   // get data
