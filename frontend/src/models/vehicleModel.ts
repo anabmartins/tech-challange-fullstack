@@ -10,6 +10,7 @@ export interface RootState {
 }
 
 export interface VehicleList {
+  id: number;
   name: string;
   plate: string;
   model: string;
