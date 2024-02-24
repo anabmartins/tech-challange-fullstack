@@ -33,8 +33,15 @@ export class VehicleService {
     return vehicle;
   }
   // search for all vehicles in memory
-  async getAllVehicles(): Promise<Vehicle[]> {
-    return this.vehicles;
+  async getAllVehicles() {
+    const vehicles = await this.vehicleModel.find().exec();
+    return vehicles.map((vhc) => ({
+      id: vhc.id,
+      name: vhc.name,
+      plate: vhc.plate,
+      model: vhc.model,
+      year: vhc.year,
+    }));
   }
 
    // Get a single vehicle by ID
@@ -58,11 +65,7 @@ export class VehicleService {
   }
 
   // Delete a vehicle
-  async deleteVehicle(id: string): Promise<void> {
-    const vehicleIndex = this.vehicles.findIndex(vehicle => vehicle.id.toString() === id);
-    if (vehicleIndex === -1) {
-      throw new Error('Vehicle not found');
-    }
-    this.vehicles.splice(vehicleIndex, 1);
+  async deleteVehicle(id: string) {
+    await this.vehicleModel.deleteOne({ _id: id }).exec();
   }
 }
