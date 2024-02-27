@@ -13,6 +13,7 @@ import {
   FormControl,
   TextField,
   Alert,
+  FormHelperText
 } from "@mui/material";
 import {
   Visibility,
@@ -33,6 +34,8 @@ const SignUp = () => {
   };
 
   const [message, setMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  // const [is, setIsValid] = useState(true)
   const [user, setUser] = useState(initialUserState);
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -58,8 +61,11 @@ const SignUp = () => {
       email: user.email,
       password: user.password,
     };
+
+    
     dispatch(registerUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
+    
         const result = actionResult.payload;
         if (result) {
           setUser((prevUser) => ({
@@ -88,12 +94,12 @@ const SignUp = () => {
             <div className="inputs">
               <FormControl
                 sx={{ m: 1, width: "40ch" }}
-                required
                 variant="outlined"
               >
                 <TextField
-                  required
                   // fullWidth
+                  error={!!errorMessage}
+                  helperText={errorMessage}
                   id="outlined-basic"
                   label="Nome completo"
                   variant="outlined"
@@ -104,12 +110,12 @@ const SignUp = () => {
               </FormControl>
               <FormControl
                 sx={{ m: 1, width: "40ch" }}
-                required
                 variant="outlined"
               >
                 <TextField
                   fullWidth
-                  required
+                  error={!!errorMessage}
+                  helperText={errorMessage}
                   type="e-mail"
                   id="outlined-basic"
                   label="E-mail"
@@ -121,7 +127,6 @@ const SignUp = () => {
               </FormControl>
               <FormControl
                 sx={{ m: 1, width: "40ch" }}
-                required
                 variant="outlined"
               >
                 <InputLabel htmlFor="outlined-adornment-password">
@@ -129,6 +134,7 @@ const SignUp = () => {
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
+                  error={!!errorMessage}
                   name="password"
                   value={user.password}
                   onChange={handleChange}
@@ -147,6 +153,8 @@ const SignUp = () => {
                   }
                   label="Senha"
                 />
+                  <FormHelperText id="my-helper-text">{errorMessage}</FormHelperText>
+
               </FormControl>
             </div>
             <Button variant="contained" className="btn-login" type="submit">
