@@ -28,7 +28,7 @@ function getUser(): JwtPayload | any {
 }
 
 const Manage = () => {
-  // state of the vehicle
+ // state of the vehicle
   const vehicleValues = {
     id: "",
     name: "",

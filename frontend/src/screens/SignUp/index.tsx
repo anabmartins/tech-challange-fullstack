@@ -13,7 +13,7 @@ import {
   FormControl,
   TextField,
   Alert,
-  FormHelperText
+  FormHelperText,
 } from "@mui/material";
 import {
   Visibility,
@@ -33,9 +33,14 @@ const SignUp = () => {
     password: "",
   };
 
+  const initialErrorState = {
+    nameError: "",
+    emailError: "",
+    passwordError: ""
+  }
+
   const [message, setMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  // const [is, setIsValid] = useState(true)
+  const [errorMessage, setErrorMessage] = useState(initialErrorState);
   const [user, setUser] = useState(initialUserState);
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -54,26 +59,72 @@ const SignUp = () => {
     event.preventDefault();
   };
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+
+  const validateForm = () => {
+    let valid = true;
+    const errors = {
+      nameError: '',
+      emailError: '',
+      passwordError: ''
+    };
+    if (!user.name) {
+      valid = false;
+      errors.nameError = 'Nome é obrigatório.';
+    } else if (user.name.length < 3) {
+      valid = false;
+      errors.nameError = 'Nome inválido.';
+    }
+    if (!user.email) {
+      valid = false;
+      errors.emailError = 'Email é obrigatório.';
+    } 
+      if (!emailRegex.test(user.email)) {
+      valid = false;
+      errors.emailError = 'Email inválido.';
+    }
+    // else {
+    //   // const emailExists = await checkEmailExists(user.email);
+    //   if (emailExists) {
+    //     valid = false;
+    //     errors.emailError = 'Este email já está em uso.';
+    //   }
+    // }
+    if (!user.password) {
+      valid = false;
+      errors.passwordError = 'Senha é obrigatória.';
+    } else 
+    if (user.password.length < 6) {
+      valid = false;
+      errors.passwordError = 'Senha deve conter no mínimo 6 caracteres.';
+    } else
+    if (!passwordRegex.test(user.password)) {
+      valid = false;
+      errors.passwordError = 'Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.';
+    }
+    setErrorMessage(errors);
+
+    return valid;
+  };
+
   const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateForm()) {
+      return;
+    } 
     let userCredentials = {
       name: user.name,
       email: user.email,
       password: user.password,
     };
 
-    
     dispatch(registerUser(userCredentials)).then(
       (actionResult: { payload: any }) => {
-    
         const result = actionResult.payload;
         if (result) {
-          setUser((prevUser) => ({
-            ...prevUser,
-            name: "",
-            email: "",
-            password: "",
-          }));
+          setUser(initialUserState);
+          setErrorMessage(initialErrorState)
           setMessage("Usuário cadastrado com sucesso!");
           setTimeout(() => {
             setMessage("");
@@ -92,14 +143,11 @@ const SignUp = () => {
           <span className="line"></span>
           <form className="form" onSubmit={handleRegisterEvent}>
             <div className="inputs">
-              <FormControl
-                sx={{ m: 1, width: "40ch" }}
-                variant="outlined"
-              >
+              <FormControl sx={{ m: 1, width: "40ch" }} variant="outlined">
                 <TextField
                   // fullWidth
-                  error={!!errorMessage}
-                  helperText={errorMessage}
+                  error={!!errorMessage.nameError}
+                  helperText={errorMessage.nameError}
                   id="outlined-basic"
                   label="Nome completo"
                   variant="outlined"
@@ -108,14 +156,11 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
               </FormControl>
-              <FormControl
-                sx={{ m: 1, width: "40ch" }}
-                variant="outlined"
-              >
+              <FormControl sx={{ m: 1, width: "40ch" }} variant="outlined">
                 <TextField
                   fullWidth
-                  error={!!errorMessage}
-                  helperText={errorMessage}
+                  error={!!errorMessage.emailError}
+                  helperText={errorMessage.emailError}
                   type="e-mail"
                   id="outlined-basic"
                   label="E-mail"
@@ -125,16 +170,13 @@ const SignUp = () => {
                   onChange={handleChange}
                 />
               </FormControl>
-              <FormControl
-                sx={{ m: 1, width: "40ch" }}
-                variant="outlined"
-              >
+              <FormControl sx={{ m: 1, width: "40ch" }} variant="outlined">
                 <InputLabel htmlFor="outlined-adornment-password">
                   Senha
                 </InputLabel>
                 <OutlinedInput
                   id="outlined-adornment-password"
-                  error={!!errorMessage}
+                  error={!!errorMessage.passwordError}
                   name="password"
                   value={user.password}
                   onChange={handleChange}
@@ -153,8 +195,9 @@ const SignUp = () => {
                   }
                   label="Senha"
                 />
-                  <FormHelperText id="my-helper-text">{errorMessage}</FormHelperText>
-
+                <FormHelperText error>
+                  {errorMessage.passwordError}
+                </FormHelperText>
               </FormControl>
             </div>
             <Button variant="contained" className="btn-login" type="submit">
