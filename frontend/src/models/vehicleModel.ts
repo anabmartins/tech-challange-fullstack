@@ -2,7 +2,7 @@ export interface Vehicle {
   id: number;
   name: string;
   plate: string;
-  model: string;
+  modelName: string;
 }
 
 export interface RootState {
@@ -13,7 +13,7 @@ export interface VehicleList {
   id: number;
   name: string;
   plate: string;
-  model: string;
+  modelName: string;
   year: number;
 }
 

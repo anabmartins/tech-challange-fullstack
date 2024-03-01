@@ -4,7 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import User from "/user.svg";
 // mui imports
-import { Button, FormControl, TextField } from "@mui/material";
+import { Button, FormControl, TextField, Alert } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from "../../models/userModel";
 import {
@@ -16,6 +16,7 @@ import {
 import { RootState } from "../../models/vehicleModel";
 import { useDispatch, useSelector } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import { Check } from "@mui/icons-material";
 
 // set the user logged in localstorage
 function getUser(): JwtPayload | any {
@@ -33,16 +34,15 @@ const Manage = () => {
     id: "",
     name: "",
     plate: "",
-    model: "",
+    modelName: "",
     year: "",
   };
   const navigate = useNavigate();
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const vehicles = useSelector((state: RootState) => state.vehicle);
   const [vehicle, setVehicle] = useState(vehicleValues);
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [title, setTitle] = useState("Adicionar novo");
-  const [btnValue, setBtnValue] = useState("Cadastrar");
 
   useEffect(() => {
     dispatch(fetchVehicle());
@@ -61,6 +61,9 @@ const Manage = () => {
   }, []);
 
   const [user, setUser] = useState<JwtPayload | any>(getUser());
+  var username = user.name
+  var nameParts = username.split(" ");
+  var firstName = nameParts[0] 
 
   // logout user
   const handleLogout = () => {
@@ -69,18 +72,26 @@ const Manage = () => {
     navigate("/");
   };
 
-  const handleEditVehicle = async (vehicleToEdit: any) => {
+  const handleEditModal = async (vehicleToEdit: any) => {
     handleModal();
     setTitle("Editar");
     setVehicle(vehicleToEdit);
-    setBtnValue("Editar");
-    try {
-      await dispatch(editVehicle(vehicleToEdit));
-    } catch (error) {
-      console.error("Failed to edit vehicle: ", error);
-    }
   };
 
+  const handleEdit = async (vehicle: any) => {
+      try {
+        await dispatch(editVehicle(vehicle));
+        setVehicle(vehicleValues);
+        setSuccessMessage("Veículo editado com sucesso!")
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
+      } catch (error) {
+        console.error("Failed to edit vehicle: ", error);
+      }
+  }
+  console.log(vehicle);
+  
   const handleDeleteVehicle = async (vehicleId: number) => {
     try {
       await dispatch(deleteVehicle(vehicleId));
@@ -95,7 +106,6 @@ const Manage = () => {
     setModal(true);
     setTitle("Adicionar novo");
     setVehicle(vehicleValues);
-    setBtnValue("Adicionar");
   };
   const closeModal = () => {
     setModal(false);
@@ -106,7 +116,7 @@ const Manage = () => {
     let newVehicle = {
       name: vehicle.name,
       plate: vehicle.plate,
-      model: vehicle.plate,
+      modelName: vehicle.modelName,
       year: vehicle.year,
     };
 
@@ -118,7 +128,7 @@ const Manage = () => {
             ...prevVehicle,
             name: "",
             plate: "",
-            model: "",
+            modelName: "",
             year: "",
           }));
         }
@@ -131,14 +141,14 @@ const Manage = () => {
       ...prevVehicle,
       [name]: value,
     }));
-  };
+  };  
 
   return (
     <>
       <div className="main">
         <div className="user-sec">
           <p className="userName">
-            Olá, {user?.name}
+            Olá, {firstName}
             <button className="logout" onClick={handleLogout}>
               sair
               <LogoutIcon />
@@ -159,14 +169,14 @@ const Manage = () => {
           <div className="list">
             {vehicles?.map((vehicle, index) => (
               <div key={index} className="vehicleCard">
-                <img src="/carplaceholder.png" className="car-placeholder" />
+                <img src="/compass.png" className="car-placeholder" />
                 <span className="card-title">{vehicle.name}</span>
                 <span className="card-sub">{vehicle.plate}</span>
                 <span className="card-text">
-                  {vehicle.model}, {vehicle.year}
+                  {vehicle.modelName}, {vehicle.year}
                 </span>
                 <div className="icons">
-                  <span onClick={() => handleEditVehicle(vehicle)}>
+                  <span onClick={() => handleEditModal(vehicle)}>
                     <img src="/edit.svg" />
                     Editar
                   </span>
@@ -182,6 +192,13 @@ const Manage = () => {
         {isModal && (
           <>
             <div className="modal">
+            {successMessage && (
+              <div className="error-message">
+              <Alert icon={<Check fontSize="inherit" />} severity="success">
+               {successMessage}
+              </Alert>
+              </div>
+            )}
               <CloseIcon onClick={closeModal} className="close-icon" />
               <p className="subtitle sb-modal">{title} veículo</p>
               <form className="form-vehicle" onSubmit={handleVehicleEvent}>
@@ -229,8 +246,8 @@ const Manage = () => {
                       label="Modelo do veículo"
                       variant="outlined"
                       required
-                      name="model"
-                      value={vehicle.model}
+                      name="modelName"
+                      value={vehicle.modelName}
                       onChange={handleChange}
                     />
                   </FormControl>
@@ -253,10 +270,10 @@ const Manage = () => {
                   </FormControl>
                 </div>
                 {vehicle.id ? (
-                  <Button
+                  <Button 
                     variant="contained"
                     className="btn-vehicle"
-                    type="submit"
+                    onClick={() => handleEdit(vehicle)}
                   >
                     Editar
                   </Button>

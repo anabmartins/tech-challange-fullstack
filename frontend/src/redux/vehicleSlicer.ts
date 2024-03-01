@@ -7,7 +7,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const createVehicle = createAsyncThunk(
   "vehicle/createVehicle",
-  async (newVehicle: { name: string; plate: string; model: string }) => {
+  async (newVehicle: { name: string; plate: string; modelName: string }) => {
     const request = axios.post<any>(VEHICLE_API, newVehicle);
     const response = (await request).data;
     return response;
@@ -32,9 +32,9 @@ export const editVehicle = createAsyncThunk(
     id: number;
     name: string;
     plate: string;
-    model: string;
+    modelName: string;
   }) => {
-    const request = axios.put<any>(
+    const request = axios.patch<any>(
       `${VEHICLE_API}/${vehicleToEdit.id}`,
       vehicleToEdit
     );

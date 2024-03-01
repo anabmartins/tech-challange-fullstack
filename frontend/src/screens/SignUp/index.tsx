@@ -23,6 +23,7 @@ import {
 import { registerUser } from "../../redux/userSlicer";
 import { useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const SignUp = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -36,12 +37,25 @@ const SignUp = () => {
   const initialErrorState = {
     nameError: "",
     emailError: "",
-    passwordError: ""
-  }
+    passwordError: "",
+  };
 
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState(initialErrorState);
   const [user, setUser] = useState(initialUserState);
+  const [userExist, setUserExist] = useState(false);
+
+  const checkEmailExists = async (email:string) => {
+    try {
+      const response = await axios.get(`http://localhost:8080/user/email/${email}`);
+      setUserExist(response.data)
+    } 
+    catch (error) {
+      console.error('Erro ao verificar email:', error);
+      return false;
+    }
+  };
+    
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -59,49 +73,47 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
 
   const validateForm = () => {
     let valid = true;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;  
+    checkEmailExists(user.email);
+    
     const errors = {
-      nameError: '',
-      emailError: '',
-      passwordError: ''
+      nameError: "",
+      emailError: "",
+      passwordError: "",
     };
     if (!user.name) {
       valid = false;
-      errors.nameError = 'Nome é obrigatório.';
+      errors.nameError = "Nome é obrigatório.";
     } else if (user.name.length < 3) {
       valid = false;
-      errors.nameError = 'Nome inválido.';
+      errors.nameError = "Nome inválido.";
     }
     if (!user.email) {
       valid = false;
-      errors.emailError = 'Email é obrigatório.';
-    } 
-      if (!emailRegex.test(user.email)) {
-      valid = false;
-      errors.emailError = 'Email inválido.';
+      errors.emailError = "Email é obrigatório.";
     }
-    // else {
-    //   // const emailExists = await checkEmailExists(user.email);
-    //   if (emailExists) {
-    //     valid = false;
-    //     errors.emailError = 'Este email já está em uso.';
-    //   }
-    // }
+    if (!emailRegex.test(user.email)) {
+      valid = false;
+      errors.emailError = "Email inválido.";
+    } else if (userExist) {
+        valid = false;
+        errors.emailError = "Este email já está em uso.";
+      }
     if (!user.password) {
       valid = false;
-      errors.passwordError = 'Senha é obrigatória.';
-    } else 
-    if (user.password.length < 6) {
+      errors.passwordError = "Senha é obrigatória.";
+    } else if (user.password.length < 6) {
       valid = false;
-      errors.passwordError = 'Senha deve conter no mínimo 6 caracteres.';
-    } else
-    if (!passwordRegex.test(user.password)) {
+      errors.passwordError = "Senha deve conter no mínimo 6 caracteres.";
+    } else if (!passwordRegex.test(user.password)) {
       valid = false;
-      errors.passwordError = 'Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.';
+      errors.passwordError =
+        "Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
     }
     setErrorMessage(errors);
 
@@ -112,7 +124,7 @@ const SignUp = () => {
     e.preventDefault();
     if (!validateForm()) {
       return;
-    } 
+    }
     let userCredentials = {
       name: user.name,
       email: user.email,
@@ -124,7 +136,7 @@ const SignUp = () => {
         const result = actionResult.payload;
         if (result) {
           setUser(initialUserState);
-          setErrorMessage(initialErrorState)
+          setErrorMessage(initialErrorState);
           setMessage("Usuário cadastrado com sucesso!");
           setTimeout(() => {
             setMessage("");
