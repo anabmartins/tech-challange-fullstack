@@ -19,17 +19,25 @@ import { ThunkDispatch } from "@reduxjs/toolkit";
 import { Check } from "@mui/icons-material";
 
 // set the user logged in localstorage
-function getUser(): JwtPayload | any {
-  let token = localStorage.getItem("token");
-  if (token) {
-    const decoded = jwtDecode(token) as JwtPayload;
-    return decoded;
-  }
-  return null;
-}
 
 const Manage = () => {
- // state of the vehicle
+  // verify if the user is logged
+  useEffect(() => {
+    const isAuthenticated = localStorage.getItem("token") !== null;
+    if (!isAuthenticated) {
+      navigate("/");
+    }
+  }, []);
+  
+  function getUser(): JwtPayload | any {
+    let token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token) as JwtPayload;
+      return decoded;
+    }
+    return null;
+  }
+  // state of the vehicle
   const vehicleValues = {
     id: "",
     name: "",
@@ -48,22 +56,16 @@ const Manage = () => {
     dispatch(fetchVehicle());
     const interval = setInterval(() => {
       dispatch(fetchVehicle());
-    }, 1000); // Atualiza a lista de veículos a cada 5 segundos
+    }, 1000); // Atualiza a lista de veículos a cada 1 segundo
     return () => clearInterval(interval);
   }, [dispatch]);
 
-  // verify if the user is logged
-  useEffect(() => {
-    const isAuthenticated = localStorage.getItem("token") !== null;
-    if (!isAuthenticated) {
-      navigate("/");
-    }
-  }, []);
-
   const [user, setUser] = useState<JwtPayload | any>(getUser());
-  var username = user.name
-  var nameParts = username.split(" ");
-  var firstName = nameParts[0] 
+  if(user && user.name){
+    var username = user.name
+    var nameParts = username.split(" ");
+    var firstName = nameParts[0] 
+  }
 
   // logout user
   const handleLogout = () => {
@@ -90,7 +92,6 @@ const Manage = () => {
         console.error("Failed to edit vehicle: ", error);
       }
   }
-  console.log(vehicle);
   
   const handleDeleteVehicle = async (vehicleId: number) => {
     try {

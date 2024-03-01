@@ -20,10 +20,14 @@ import {
   VisibilityOff,
   CheckCircleOutline,
 } from "@mui/icons-material";
-import { registerUser } from "../../redux/userSlicer";
+import { checkEmailExists, registerUser } from "../../redux/userSlicer";
 import { useDispatch } from "react-redux";
 import { ThunkDispatch } from "@reduxjs/toolkit";
-import axios from "axios";
+import {
+  validateForm,
+  User,
+  ValidationErrors,
+} from "../../components/validateForm";
 
 const SignUp = () => {
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -41,21 +45,10 @@ const SignUp = () => {
   };
 
   const [message, setMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState(initialErrorState);
-  const [user, setUser] = useState(initialUserState);
-  const [userExist, setUserExist] = useState(false);
+  const [errorMessage, setErrorMessage] =
+    useState<ValidationErrors>(initialErrorState);
+  const [user, setUser] = useState<User>(initialUserState);
 
-  const checkEmailExists = async (email:string) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/user/email/${email}`);
-      setUserExist(response.data)
-    } 
-    catch (error) {
-      console.error('Erro ao verificar email:', error);
-      return false;
-    }
-  };
-    
   const handleChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     setUser((prevUser) => ({
@@ -73,77 +66,38 @@ const SignUp = () => {
     event.preventDefault();
   };
 
-
-  const validateForm = () => {
-    let valid = true;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;  
-    checkEmailExists(user.email);
-    
-    const errors = {
-      nameError: "",
-      emailError: "",
-      passwordError: "",
-    };
-    if (!user.name) {
-      valid = false;
-      errors.nameError = "Nome é obrigatório.";
-    } else if (user.name.length < 3) {
-      valid = false;
-      errors.nameError = "Nome inválido.";
-    }
-    if (!user.email) {
-      valid = false;
-      errors.emailError = "Email é obrigatório.";
-    }
-    if (!emailRegex.test(user.email)) {
-      valid = false;
-      errors.emailError = "Email inválido.";
-    } else if (userExist) {
-        valid = false;
-        errors.emailError = "Este email já está em uso.";
-      }
-    if (!user.password) {
-      valid = false;
-      errors.passwordError = "Senha é obrigatória.";
-    } else if (user.password.length < 6) {
-      valid = false;
-      errors.passwordError = "Senha deve conter no mínimo 6 caracteres.";
-    } else if (!passwordRegex.test(user.password)) {
-      valid = false;
-      errors.passwordError =
-        "Senha deve conter pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial.";
-    }
-    setErrorMessage(errors);
-
-    return valid;
-  };
-
   const handleRegisterEvent = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
     let userCredentials = {
       name: user.name,
       email: user.email,
       password: user.password,
     };
 
-    dispatch(registerUser(userCredentials)).then(
-      (actionResult: { payload: any }) => {
-        const result = actionResult.payload;
-        if (result) {
-          setUser(initialUserState);
-          setErrorMessage(initialErrorState);
-          setMessage("Usuário cadastrado com sucesso!");
-          setTimeout(() => {
-            setMessage("");
-          }, 5000);
+    const checkEmailResult = await dispatch(checkEmailExists(user.email));
+    const emailExists = checkEmailResult.payload;
+
+    // set and update the user email value
+    const updatedUser = { ...user, emailExists };
+  
+    const errors = validateForm(updatedUser);
+    setErrorMessage(errors);
+
+    if (Object.values(errors).every((error) => !error)) {
+      dispatch(registerUser(userCredentials)).then(
+        (actionResult: { payload: any }) => {
+          const result = actionResult.payload;
+          if (result) {
+            setUser(initialUserState);
+            setErrorMessage(initialErrorState);
+            setMessage("Usuário cadastrado com sucesso!");
+            setTimeout(() => {
+              setMessage("");
+            }, 5000);
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   return (

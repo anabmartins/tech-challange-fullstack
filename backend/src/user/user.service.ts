@@ -48,7 +48,6 @@ export class UserService {
 
   async userExistByEmail(email: string): Promise<boolean>{
     const user = await this.userModel.findOne({ email }).exec(); 
-    console.log(user);
     if(user) { return true } 
     return false
   }

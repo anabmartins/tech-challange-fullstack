@@ -19,10 +19,22 @@ export const registerUser = createAsyncThunk(
   async (userCredentials: UserCredentials) => {
     const request = axios.post(USER_API, userCredentials);
     const response = (await request).data;
-    console.log(response.data);
     return response;
   }
 );
+
+export const checkEmailExists = createAsyncThunk(
+  "user/checkEmail",
+  async (email:string) => {
+  try {
+    const response = await axios.get(`http://localhost:8080/user/email/${email}`);
+    return response.data;
+  } 
+  catch (error) {
+    console.error('Erro ao verificar email:', error);
+    return false;
+  }
+});
 
 // Slice
 
@@ -55,7 +67,6 @@ const userSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.user = null;
-        console.log(action.error.message);
         if (action.error.message === "Request failed with status code 500") {
           state.error = "Credenciais inválidas";
         } 
@@ -81,7 +92,7 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = null;
         state.error = action.error?.message ?? "An error occurred";
-      });
+      })
   },
 });
 
