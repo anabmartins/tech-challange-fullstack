@@ -18,8 +18,7 @@ export class VehicleController {
 
   // insert data
   @Post()
-  async createVehicle(
-    @Body() createVehicle: createVehicleDto) {
+  async createVehicle(@Body() createVehicle: createVehicleDto) {
     return this.vehicleService.insertVehicle(createVehicle);
   }
 
@@ -40,8 +39,9 @@ export class VehicleController {
   async updateVehicle(
     @Param('id') id: string,
     @Body() updateVehicle: updateVehicleDto,
-  ): Promise<Vehicle> {
-    return this.vehicleService.updateVehicle(id, updateVehicle);
+  ) {
+    await this.vehicleService.updateVehicle(id, updateVehicle);
+    return null;
   }
 
   // delete data

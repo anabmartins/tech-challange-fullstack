@@ -1,6 +1,7 @@
 export interface createVehicleDto {
+  id: string;
   name: string;
   plate: string;
-  model: string;
+  modelName: string;
   year: number;
 }

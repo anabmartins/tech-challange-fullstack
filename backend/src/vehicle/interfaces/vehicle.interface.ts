@@ -1,7 +1,7 @@
 export interface Vehicle {
-  id: number;
+  id: string;
   name: string;
   plate: string;
-  model: string;
+  modelName: string;
   year: string | number;
 }

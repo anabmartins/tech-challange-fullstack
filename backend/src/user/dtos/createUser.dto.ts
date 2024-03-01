@@ -1,6 +1,6 @@
 // DTO (Data Transfer Object)
 export interface CreateUserDto {
-  id: number | string;
+  id: string;
   name: string;
   email: string;
   password: string;

@@ -1,37 +1,28 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { createVehicleDto } from './dtos/createVehicle.dto';
-import { updateVehicleDto } from './dtos/updateVehicle.dto';
 import { Vehicle } from './interfaces/vehicle.interface';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { VehicleModel } from './vehicle.model';
 
 @Injectable()
 export class VehicleService {
   private vehicles: Vehicle[] = [];
 
-  constructor(@InjectModel('Vehicle') private readonly vehicleModel: Model<Vehicle>) {}
+  constructor(
+    @InjectModel('Vehicle') private readonly vehicleModel: Model<Vehicle>,
+  ) {}
 
   // insert new vehicle in database
-  async insertVehicle(createVehicleDto: createVehicleDto){
+  async insertVehicle(createVehicleDto: createVehicleDto) {
     const newVehicle = new this.vehicleModel({
       ...createVehicleDto,
-      id: this.vehicles.length + 1,
       plate: createVehicleDto.plate.toUpperCase(),
     });
     const result = await newVehicle.save();
     return result.id as string;
   }
 
-  async createVehicle(createVehicleDto: createVehicleDto): Promise<Vehicle> {
-    const vehicle: Vehicle = {
-      ...createVehicleDto,
-      id: this.vehicles.length + 1
-    };
-
-    this.vehicles.push(vehicle);
-
-    return vehicle;
-  }
   // search for all vehicles in memory
   async getAllVehicles() {
     const vehicles = await this.vehicleModel.find().exec();
@@ -39,29 +30,41 @@ export class VehicleService {
       id: vhc.id,
       name: vhc.name,
       plate: vhc.plate,
-      model: vhc.model,
+      modelName: vhc.modelName,
       year: vhc.year,
     }));
   }
 
-   // Get a single vehicle by ID
-   async getVehicleById(id: string): Promise<Vehicle> {
-    const vehicle = this.vehicles.find(vehicle => vehicle.id.toString() === id);
-    if (!vehicle) {
-      throw new Error('Vehicle not found');
+  // Get a single vehicle by ID
+  async getVehicleById(id: string): Promise<VehicleModel> {
+    let vehicle: any;
+    try {
+      vehicle = await this.vehicleModel.findById(id).exec();
+    } catch (error) {
+      throw new NotFoundException('Veículo não encontrado');
     }
-    return vehicle;
+    if (!vehicle) {
+      throw new NotFoundException('Veículo não encontrado');
+    }
+    return vehicle
   }
 
   // Update a vehicle
-  async updateVehicle(id: string, updateVehicleDto: updateVehicleDto): Promise<Vehicle> {
-    const vehicleIndex = this.vehicles.findIndex(vehicle => vehicle.id.toString() === id);
-    if (vehicleIndex === -1) {
-      throw new Error('Vehicle not found');
+  async updateVehicle(id: string, vehicleEdited: VehicleModel) {
+    const updatedVehicle = await this.getVehicleById(id);
+    if (vehicleEdited.name) {
+      updatedVehicle.name = vehicleEdited.name;
     }
-    // Merge the updateVehicleDto into the existing vehicle object
-    this.vehicles[vehicleIndex] = { ...this.vehicles[vehicleIndex], ...updateVehicleDto };
-    return this.vehicles[vehicleIndex];
+    if (vehicleEdited.modelName) {
+      updatedVehicle.modelName = vehicleEdited.modelName;
+    }
+    if (vehicleEdited.plate) {
+      updatedVehicle.plate = vehicleEdited.plate;
+    }
+    if (vehicleEdited.year) {
+      updatedVehicle.year = vehicleEdited.year;
+    }
+    updatedVehicle.save();
   }
 
   // Delete a vehicle
